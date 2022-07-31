@@ -16,3 +16,14 @@ export const login = (mobile, code) => {
     }
   })
 }
+
+/**
+ * 验证码API
+ * @param {String} mobile 手机号
+ * @returns Promise
+ */
+export const getCodeApi = (mobile) => {
+  return request({
+    url: `/v1_0/sms/codes/${mobile}`
+  })
+}

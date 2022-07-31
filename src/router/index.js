@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Profile from '@/views/Profile'
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -35,10 +33,6 @@ const routes = [
         component: () => import('@/views/My')
       }
     ]
-  },
-  {
-    path: '/profile',
-    component: Profile
   }
 ]
 

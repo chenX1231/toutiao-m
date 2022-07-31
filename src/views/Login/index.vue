@@ -90,7 +90,7 @@ export default {
         // console.log(data)
         this.$store.commit('SET_TOKEN', token) // vuex存token
         // 跳转页面
-        this.$router.push('/profile')
+        this.$router.push('/my')
         this.$toast.success('登录成功')
       } catch (e) {
         // console.log(e)

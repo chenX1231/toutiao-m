@@ -12,6 +12,7 @@ import 'amfe-flexible/index.min.js'
 
 Vue.use(Vant)
 Vue.config.productionTip = false
+// console.log(store)
 
 new Vue({
   router,

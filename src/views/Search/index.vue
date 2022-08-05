@@ -12,6 +12,7 @@
         class="search"
         @search="onSearch"
         @focus="onSearchFocus"
+        @cancel="$router.back()"
       />
     </form>
 

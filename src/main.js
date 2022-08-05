@@ -10,6 +10,13 @@ import 'vant/lib/index.css'
 // 引入rem适配
 import 'amfe-flexible/index.min.js'
 
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/zh'
+
+Vue.prototype.dayjs = dayjs
+Vue.prototype.relativeTime = relativeTime
+
 Vue.use(Vant)
 Vue.config.productionTip = false
 // console.log(store)

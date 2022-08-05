@@ -40,7 +40,17 @@ export default {
   computed: {
     label() {
       const art = this.articleInfo
-      return `${art.aut_name} ${art.comm_count}条评论 ${art.pubdate}`
+      return `${art.aut_name} ${art.comm_count}条评论 ${this.time(art.pubdate)}`
+    }
+  },
+  methods: {
+    // 三年前
+    time(time) {
+      this.dayjs.extend(this.relativeTime)
+      this.dayjs.locale('zh')
+      const a = this.dayjs()
+      const b = this.dayjs(time)
+      return a.to(b)
     }
   }
 }

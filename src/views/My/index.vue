@@ -79,9 +79,21 @@ export default {
     this.getUserInfo()
   },
   methods: {
+    // 退出按钮
     logout() {
-      // 清除token 传入空对象{}
-      this.$store.commit('SET_TOKEN', {})
+      this.$dialog
+        .confirm({
+          title: '提示',
+          message: '确定要退出吗？'
+        })
+        .then(() => {
+          // on confirm
+          // 清除token 传入空对象{}
+          this.$store.commit('SET_TOKEN', {})
+        })
+        .catch(() => {
+          // on cancel
+        })
     },
     // 获取用户信息
     async getUserInfo() {

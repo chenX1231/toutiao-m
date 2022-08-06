@@ -8,6 +8,7 @@
       @click-left="$router.back()"
     />
     <!-- 个人信息区域 -->
+    <!-- 头像区域 -->
     <van-cell title="头像" is-link @click="$refs.file.click()">
       <van-image width="0.8rem" height="0.8rem" :src="userInfo.photo" round />
       <!-- hidden:隐藏属性 -->
@@ -20,6 +21,73 @@
         @change="changePhoto"
       />
     </van-cell>
+    <!-- 昵称区域 -->
+    <van-cell title="昵称" is-link @click="showNickNamePopup">
+      <template>{{ userInfo.name }}</template>
+    </van-cell>
+    <van-popup
+      v-model="showNickName"
+      position="bottom"
+      :style="{ height: '100%', width: '100%' }"
+    >
+      <van-nav-bar
+        title="更新昵称"
+        left-text="取消"
+        right-text="保存"
+        left-arrow
+        @click-left="onClickLeftNickName"
+        @click-right="onClickRightNickName"
+      />
+      <van-field
+        v-model="nickName"
+        rows="2"
+        autosize
+        type="textarea"
+        maxlength="11"
+        placeholder="请输入昵称"
+        show-word-limit
+      />
+    </van-popup>
+
+    <!-- 性别区域 -->
+    <van-cell title="性别" is-link @click="showPopupGender">
+      <template>{{ userInfo.gender ? '女' : '男' }}</template>
+    </van-cell>
+    <van-popup
+      v-model="showGender"
+      position="bottom"
+      :style="{ height: '50%', width: '100%' }"
+    >
+      <van-picker
+        title="更新性别"
+        show-toolbar
+        :default-index="userInfo.gender"
+        :columns="gender"
+        @confirm="onClickRightGender"
+        @cancel="onClickLeftGender"
+      />
+    </van-popup>
+
+    <!-- 生日区域 -->
+    <van-cell title="生日" is-link @click="showPopupBirthday">
+      <template>{{ userInfo.birthday }}</template>
+    </van-cell>
+    <van-popup
+      v-model="showBirthday"
+      position="bottom"
+      :style="{ height: '50%', width: '100%' }"
+    >
+      <van-datetime-picker
+        v-model="currentDate"
+        type="date"
+        title="选择年月日"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @confirm="onBirthday"
+        @cancel="cancelBirthday"
+      />
+    </van-popup>
+
     <!-- 展示图片弹出层 -->
     <van-popup
       class="avator-popup"
@@ -39,16 +107,26 @@
 </template>
 
 <script>
-import { getUserInfoApi } from '@/api'
+import { getUserInfoApi, getUserProfile } from '@/api'
 import AvatorPopup from './components/AvatorPopup.vue'
 import { fileReaderByBase64 } from '@/utils/fileReader'
+import dayjs from 'dayjs'
 export default {
   name: 'User',
   data() {
     return {
       userInfo: {},
       isShowPhoto: false,
-      photo: ''
+      photo: '',
+      showNickName: false,
+      nickName: '',
+      showGender: false,
+      gender: ['男', '女'],
+      showBirthday: false,
+      minDate: new Date(1900, 0, 1),
+      maxDate: new Date(2100, 11, 31),
+      currentDate: new Date(),
+      birthday: ''
     }
   },
   components: {
@@ -63,6 +141,8 @@ export default {
       try {
         const { data } = await getUserInfoApi()
         this.userInfo = data.data
+        this.nickName = this.userInfo.name
+        this.birthday = data.data.birthday.split('-').join(',')
         // console.log(data)
       } catch (error) {
         this.$toast.fail('获取信息失败，请重新刷新')
@@ -103,6 +183,69 @@ export default {
       e.target.value = ''
 
       this.isShowPhoto = true
+    },
+    // 展示昵称弹出层
+    showNickNamePopup() {
+      this.showNickName = true
+    },
+    // 取消关闭弹层
+    onClickLeftNickName() {
+      this.showNickName = false
+    },
+    // 修改昵称
+    async onClickRightNickName() {
+      try {
+        await getUserProfile({ name: this.nickName })
+        this.getUserInfo()
+        this.$toast.success('修改成功')
+        this.showNickName = false
+      } catch (error) {
+        this.$toast.fail('修改失败')
+      }
+    },
+    // 展示性别弹出层
+    showPopupGender() {
+      this.showGender = true
+    },
+    // 取消关闭弹层
+    onClickLeftGender() {
+      this.showGender = false
+    },
+    // 修改性别
+    async onClickRightGender(val) {
+      if (val === '男') {
+        val = 0
+      } else {
+        val = 1
+      }
+      try {
+        await getUserProfile({ gender: val })
+        this.getUserInfo()
+        this.$toast.success('修改成功')
+        this.showGender = false
+      } catch (error) {
+        this.$toast.fail('修改失败')
+      }
+    },
+    // 展示生日弹出层
+    showPopupBirthday() {
+      this.showBirthday = true
+      this.currentDate = new Date(this.birthday)
+    },
+    // 关闭生日弹出层
+    cancelBirthday() {
+      this.showBirthday = false
+    },
+    // 修改生日
+    async onBirthday(val) {
+      try {
+        await getUserProfile({ birthday: dayjs(val).format('YYYY-MM-DD') })
+        this.getUserInfo()
+        this.$toast.success('修改成功')
+        this.showBirthday = false
+      } catch (error) {
+        this.$toast.fail('修改失败')
+      }
     }
   }
 }

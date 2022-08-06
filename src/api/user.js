@@ -59,3 +59,20 @@ export const getUserPhoto = (file) => {
     data: fm
   })
 }
+
+/**
+ * 编辑个人资料
+ * @param {String} name 昵称
+ * @param {String} gender 性别，0-男，1-女
+ * @param {String} birthday 生日，格式'2018-12-20'
+ * @param {String} realName 真实姓名
+ * @param {String} intro 个人介绍
+ * @returns Promise
+ */
+export const getUserProfile = (data) => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data
+  })
+}

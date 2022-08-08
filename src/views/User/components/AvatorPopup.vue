@@ -51,6 +51,7 @@ export default {
         try {
           // 发送请求
           const { data } = await getUserPhoto(blob)
+          // console.log(data)
           // 给父组件传图片
           this.$emit('update-avator', data.data.photo)
           // console.log(data)

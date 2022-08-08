@@ -4,6 +4,7 @@
       v-for="(item, index) in lightHeightSuggestion"
       :key="index"
       icon="search"
+      @click="toSearch(item)"
     >
       <!-- 给建议列表对应的keywords高亮 -->
       <template #title>
@@ -79,7 +80,18 @@ export default {
       } catch (error) {
         this.$toast.fail('获取失败')
       }
-    }, 500)
+    }, 500),
+    // 点击搜索建议进行对应搜索
+    toSearch(val) {
+      // 去除样式
+      const val1 = val.split('<span style="color:red">')
+      const val2 = val1.join('')
+      const val3 = val2.split('</span>')
+      val = val3.join('')
+      // console.log(val)
+      this.$parent.keywords = val
+      this.$parent.onSearch()
+    }
   }
 }
 </script>

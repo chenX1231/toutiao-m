@@ -1,6 +1,9 @@
 <template>
   <div>
-    <router-view></router-view>
+    <transition name="bounce" mode="out-in">
+      <router-view></router-view>
+    </transition>
+
     <!-- <h1>{{ $store.state.num }}</h1>
     <button @click="btn">点击</button> -->
   </div>
@@ -21,4 +24,19 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.bounce-enter-active {
+  animation: bounce-in 0.4s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.4s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+</style>

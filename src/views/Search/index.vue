@@ -41,7 +41,9 @@ export default {
     return {
       keywords: '',
       // 记录用户是否按搜索了
-      isShowSearchResult: false
+      isShowSearchResult: false,
+      keywordsArr:
+        JSON.parse(localStorage.getItem('TOUTIAO_SEARCH_RESULT')) || []
     }
   },
   computed: {
@@ -62,6 +64,22 @@ export default {
     onSearch() {
       // 用户按了搜索
       this.isShowSearchResult = true
+      // 按了回车将搜索关键词存入本地
+      // console.log(this.keywords)
+      // 找到有无相同的keywords，如果有返回true
+      const flag = this.keywordsArr.some((ele) => ele === this.keywords)
+      if (flag) {
+        // 找到对应的索引号
+        const index = this.keywordsArr.indexOf(this.keywords)
+        // console.log(index)
+        this.keywordsArr.splice(index, 1)
+      }
+      this.keywordsArr.unshift(this.keywords)
+      // 存入本地
+      localStorage.setItem(
+        'TOUTIAO_SEARCH_RESULT',
+        JSON.stringify(this.keywordsArr)
+      )
     },
     onSearchFocus() {
       // 用户聚焦输入框,获取焦点

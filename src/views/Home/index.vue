@@ -49,6 +49,7 @@ import {
 } from '@/api'
 import AricList from './components/AricList.vue'
 import ChannelPopup from './components/ChannelPopup.vue'
+import 'animate.css'
 export default {
   name: 'Home',
   components: { AricList, ChannelPopup },
